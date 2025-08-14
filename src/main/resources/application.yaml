@@ -8,3 +8,7 @@ spring:
     url: ${DBMS_CONNECTION}
     username: ${DBMS_USERNAME}
     password: ${DBMS_PASSWORD}
+
+jwt:
+  signerKey: ${JWT_SIGNER_KEY}
+  valid-duration: ${JWT_VALID_DURATION}
