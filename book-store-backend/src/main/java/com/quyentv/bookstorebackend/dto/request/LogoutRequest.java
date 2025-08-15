@@ -1,4 +1,4 @@
-package com.devteria.identityservice.dto.request;
+package com.quyentv.bookstorebackend.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

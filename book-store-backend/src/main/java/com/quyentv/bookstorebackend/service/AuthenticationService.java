@@ -7,6 +7,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.quyentv.bookstorebackend.dto.request.AuthenticationRequest;
 import com.quyentv.bookstorebackend.dto.request.IntrospectRequest;
+import com.quyentv.bookstorebackend.dto.request.LogoutRequest;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
 import com.quyentv.bookstorebackend.entity.User;
@@ -19,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,9 +46,12 @@ public class AuthenticationService {
     protected long VALID_DURATION;
 
     UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+    RedisService redisService;
+
+    private static final String BLACKLIST_PREFIX = "jti:";
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -64,16 +67,49 @@ public class AuthenticationService {
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
+        boolean isValid = true;
 
+        try {
+            verifyToken(token);
+        } catch (AppException e) {
+            isValid = false;
+        }
+
+        return IntrospectResponse.builder().valid(isValid).build();
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            var signToken = verifyToken(request.getToken());
+
+            String jti = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+            long expiresInSeconds = (expiryTime.getTime() - new Date().getTime()) / 1000;
+
+            redisService.save(BLACKLIST_PREFIX + jti, expiresInSeconds);
+        } catch (AppException exception) {
+            log.info("Token already expired");
+        }
+    }
+
+    private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
         SignedJWT signedJWT = SignedJWT.parse(token);
+
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
 
-        return IntrospectResponse.builder()
-                .valid(verified && expiryTime.after(new Date()))
-                .build();
+        if (!(verified && expiryTime.after(new Date())))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        var jti = signedJWT.getJWTClaimsSet().getJWTID();
+        if (jti != null && redisService.hasKey(BLACKLIST_PREFIX + jti)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        return signedJWT;
     }
 
     public String generateToken(User user) {
