@@ -12,7 +12,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 jwt:
   signerKey: ${JWT_SIGNER_KEY}
   valid-duration: ${JWT_VALID_DURATION}
+
