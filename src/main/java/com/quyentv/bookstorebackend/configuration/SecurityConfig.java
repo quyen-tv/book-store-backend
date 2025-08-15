@@ -1,5 +1,6 @@
 package com.quyentv.bookstorebackend.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/users",
-            "/auth/token", "/auth/introspect"
+            "/auth/token", "/auth/introspect", "auth/logout"
     };
 
     @Value("${jwt.signerKey}")
