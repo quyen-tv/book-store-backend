@@ -2,9 +2,13 @@ package com.quyentv.bookstorebackend.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.quyentv.bookstorebackend.dto.request.AuthenticationRequest;
+import com.quyentv.bookstorebackend.dto.request.IntrospectRequest;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
+import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
 import com.quyentv.bookstorebackend.entity.User;
 import com.quyentv.bookstorebackend.exception.AppException;
 import com.quyentv.bookstorebackend.exception.ErrorCode;
@@ -20,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -55,6 +60,20 @@ public class AuthenticationService {
         var token = generateToken(user);
 
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
+    }
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+        var token = request.getToken();
+
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+
+        return IntrospectResponse.builder()
+                .valid(verified && expiryTime.after(new Date()))
+                .build();
     }
 
     public String generateToken(User user) {
