@@ -3,6 +3,7 @@ package com.quyentv.bookstorebackend.controller;
 import com.nimbusds.jose.JOSEException;
 import com.quyentv.bookstorebackend.dto.request.AuthenticationRequest;
 import com.quyentv.bookstorebackend.dto.request.IntrospectRequest;
+import com.quyentv.bookstorebackend.dto.request.LogoutRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
@@ -36,5 +37,13 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
+                .message("Successfully logged out!")
+                .build();
     }
 }

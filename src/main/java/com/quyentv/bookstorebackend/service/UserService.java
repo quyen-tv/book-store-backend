@@ -16,10 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +32,11 @@ public class UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
@@ -59,7 +57,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUser(user, request);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
