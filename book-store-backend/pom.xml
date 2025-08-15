@@ -55,6 +55,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
 			<version>10.4.1</version>
