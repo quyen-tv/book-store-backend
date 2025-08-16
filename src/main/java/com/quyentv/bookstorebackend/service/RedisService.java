@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -17,8 +19,8 @@ public class RedisService {
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public void save(String key, long duration) {
-        redisTemplate.opsForValue().set(key, duration);
+    public void save(String key, Object value, long duration, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, duration, timeUnit);
     }
 
     public String get(String key) {
