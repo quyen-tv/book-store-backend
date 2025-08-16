@@ -61,7 +61,6 @@ public class UserMapperImpl implements UserMapper {
             return;
         }
 
-        user.setPassword( request.getPassword() );
         user.setFirstName( request.getFirstName() );
         user.setLastName( request.getLastName() );
         user.setDob( request.getDob() );

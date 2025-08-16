@@ -1,5 +1,6 @@
 package com.quyentv.bookstorebackend.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,6 +11,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LogoutRequest {
 
+    @NotBlank(message = "ACCESS_TOKEN_IS_REQUIRED")
     String accessToken;
+
+    @NotBlank(message = "REFRESH_TOKEN_IS_REQUIRED")
     String refreshToken;
 }

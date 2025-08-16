@@ -1,7 +1,5 @@
 package com.quyentv.bookstorebackend.dto.request;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -15,9 +13,10 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationRequest {
 
     @NotNull(message = "USERNAME_IS_REQUIRED")
+    @Size(min = 4, message = "INVALID_USERNAME")
     String username;
 
     @NotNull(message = "PASSWORD_IS_REQUIRED")
-    @Size(min = 6, message = "PASSWORD_MIN_SIZE_INVALID")
+    @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 }
