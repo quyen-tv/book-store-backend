@@ -18,6 +18,7 @@ spring:
       port: ${REDIS_PORT}
 
 jwt:
-  signerKey: ${JWT_SIGNER_KEY}
-  valid-duration: ${JWT_VALID_DURATION}
+  signer-key: ${JWT_SIGNER_KEY}
+  access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES}
+  refreshable-ttl-days: ${JWT_REFRESHABLE_TTL_DAYS}
 
