@@ -2,7 +2,7 @@ package com.quyentv.bookstorebackend.configuration;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.quyentv.bookstorebackend.service.JwtService;
+import com.quyentv.bookstorebackend.service.impl.JwtServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signer-key}")
     private String signerKey;
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtServiceImpl;
     private NimbusJwtDecoder nimbusJwtDecoder;
 
     @PostConstruct
@@ -39,7 +39,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     public Jwt decode(String token) throws JwtException {
 
         try {
-            jwtService.verifyAccessToken(token);
+            jwtServiceImpl.verifyAccessToken(token);
             return nimbusJwtDecoder.decode(token);
         } catch (JOSEException | ParseException e) {
             throw new JwtException("Invalid token", e);

@@ -8,7 +8,7 @@ import com.quyentv.bookstorebackend.dto.request.RefreshRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
-import com.quyentv.bookstorebackend.service.AuthenticationService;
+import com.quyentv.bookstorebackend.service.impl.AuthenticationServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,33 +26,39 @@ import java.text.ParseException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
 
-    AuthenticationService authenticationService;
+    AuthenticationServiceImpl authenticationServiceImpl;
 
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
-        var result = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+        var result = authenticationServiceImpl.authenticate(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .message("Authentication successful!")
+                .result(result)
+                .build();
     }
 
     @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authenticate(@RequestBody @Valid IntrospectRequest request)
             throws ParseException, JOSEException {
-        var result = authenticationService.introspect(request);
+        var result = authenticationServiceImpl.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
     }
 
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request) throws ParseException, JOSEException {
-        authenticationService.logout(request);
+        authenticationServiceImpl.logout(request);
         return ApiResponse.<Void>builder()
-                .message("Successfully logged out!")
+                .message("Logged out successfully!")
                 .build();
     }
 
     @PostMapping("/refresh")
     ApiResponse<AuthenticationResponse> refreshToken(@RequestBody @Valid RefreshRequest request) {
-        var result = authenticationService.refreshToken(request);
-        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+        var result = authenticationServiceImpl.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .message("Token refreshed successfully!")
+                .result(result)
+                .build();
 
     }
 }

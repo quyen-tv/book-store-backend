@@ -3,7 +3,7 @@ package com.quyentv.bookstorebackend.controller;
 import com.quyentv.bookstorebackend.dto.request.PermissionRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.PermissionResponse;
-import com.quyentv.bookstorebackend.service.PermissionService;
+import com.quyentv.bookstorebackend.service.impl.PermissionServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,28 +19,29 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class PermissionController {
-    PermissionService permissionService;
+    PermissionServiceImpl permissionServiceImpl;
 
     @PostMapping
     ApiResponse<PermissionResponse> create(@RequestBody @Valid PermissionRequest request) {
         return ApiResponse.<PermissionResponse>builder()
-                .result(permissionService.create(request))
-                .message("Successfully created!")
+                .result(permissionServiceImpl.create(request))
+                .message("Permission created successfully!")
                 .build();
     }
 
     @GetMapping
     ApiResponse<List<PermissionResponse>> getAll() {
         return ApiResponse.<List<PermissionResponse>>builder()
-                .result(permissionService.getAll())
+                .message("Permissions fetched successfully!")
+                .result(permissionServiceImpl.getAll())
                 .build();
     }
 
     @DeleteMapping("/{permission}")
     ApiResponse<Void> delete(@PathVariable String permission) {
-        permissionService.delete(permission);
+        permissionServiceImpl.delete(permission);
         return ApiResponse.<Void>builder()
-                .message("Successfully deleted!")
+                .message("Permission has been deleted successfully!")
                 .build();
     }
 }
