@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.quyentv.bookstorebackend.dto.request.AuthenticationRequest;
 import com.quyentv.bookstorebackend.dto.request.IntrospectRequest;
 import com.quyentv.bookstorebackend.dto.request.LogoutRequest;
+import com.quyentv.bookstorebackend.dto.request.RefreshRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
@@ -45,5 +46,12 @@ public class AuthenticationController {
         return ApiResponse.<Void>builder()
                 .message("Successfully logged out!")
                 .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest request) {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+
     }
 }
