@@ -9,6 +9,7 @@ import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
 import com.quyentv.bookstorebackend.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,20 +29,20 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/token")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
 
     @PostMapping("/introspect")
-    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody @Valid IntrospectRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
     }
 
     @PostMapping("/logout")
-    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+    ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder()
                 .message("Successfully logged out!")
@@ -49,7 +50,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest request) {
+    ApiResponse<AuthenticationResponse> refreshToken(@RequestBody @Valid RefreshRequest request) {
         var result = authenticationService.refreshToken(request);
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
 

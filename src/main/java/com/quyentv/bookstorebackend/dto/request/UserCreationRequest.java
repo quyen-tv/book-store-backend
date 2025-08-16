@@ -3,6 +3,7 @@ package com.quyentv.bookstorebackend.dto.request;
 import java.time.LocalDate;
 
 import com.quyentv.bookstorebackend.validator.DobConstraint;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.*;
@@ -14,9 +15,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    @Size(min = 4, message = "USERNAME_INVALID")
+
+    @NotNull(message = "USERNAME_IS_REQUIRED")
+    @Size(min = 4, message = "INVALID_USERNAME")
     String username;
 
+    @NotNull(message = "PASSWORD_IS_REQUIRED")
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 
