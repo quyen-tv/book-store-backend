@@ -4,7 +4,7 @@ import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
-import com.quyentv.bookstorebackend.service.UserService;
+import com.quyentv.bookstorebackend.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -21,46 +21,53 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
         return ApiResponse.<UserResponse>builder()
-                .result(userService.createUser(request))
+                .message("User created successfully!")
+                .result(userServiceImpl.createUser(request))
                 .build();
     }
 
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers() {
         return ApiResponse.<List<UserResponse>>builder()
-                .result(userService.getUsers())
+                .message("Users fetched successfully!")
+                .result(userServiceImpl.getUsers())
                 .build();
     }
 
     @GetMapping("/{userId}")
     ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
+                .message("User fetched successfully!")
+                .result(userServiceImpl.getUser(userId))
                 .build();
     }
 
     @GetMapping("/my-info")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo())
+                .message("Your information fetched successfully!")
+                .result(userServiceImpl.getMyInfo())
                 .build();
     }
 
     @DeleteMapping("/{userId}")
     ApiResponse<String> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
-        return ApiResponse.<String>builder().result("User has been deleted").build();
+        userServiceImpl.deleteUser(userId);
+        return ApiResponse.<String>builder()
+                .message("User has been deleted successfully!")
+                .build();
     }
 
     @PutMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(userId, request))
+                .message("User updated successfully!")
+                .result(userServiceImpl.updateUser(userId, request))
                 .build();
     }
 }
