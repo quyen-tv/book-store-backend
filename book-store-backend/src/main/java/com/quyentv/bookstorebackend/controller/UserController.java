@@ -6,14 +6,11 @@ import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
 import com.quyentv.bookstorebackend.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +21,7 @@ public class UserController {
     UserServiceImpl userServiceImpl;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User created successfully!")
                 .result(userServiceImpl.createUser(request))

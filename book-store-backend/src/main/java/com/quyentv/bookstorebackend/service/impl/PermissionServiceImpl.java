@@ -6,13 +6,12 @@ import com.quyentv.bookstorebackend.entity.Permission;
 import com.quyentv.bookstorebackend.mapper.PermissionMapper;
 import com.quyentv.bookstorebackend.repository.PermissionRepository;
 import com.quyentv.bookstorebackend.service.PermissionService;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

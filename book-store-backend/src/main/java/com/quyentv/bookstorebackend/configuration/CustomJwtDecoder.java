@@ -4,6 +4,8 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.quyentv.bookstorebackend.service.impl.JwtServiceImpl;
 import jakarta.annotation.PostConstruct;
+import java.text.ParseException;
+import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -12,9 +14,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.spec.SecretKeySpec;
-import java.text.ParseException;
 
 @Component
 @RequiredArgsConstructor
@@ -29,8 +28,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @PostConstruct
     private void init() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), JWSAlgorithm.HS512.toString());
-        this.nimbusJwtDecoder = NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
+        this.nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }

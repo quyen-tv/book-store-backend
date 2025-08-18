@@ -11,16 +11,15 @@ import com.quyentv.bookstorebackend.exception.AppException;
 import com.quyentv.bookstorebackend.exception.ErrorCode;
 import com.quyentv.bookstorebackend.repository.UserRepository;
 import com.quyentv.bookstorebackend.service.AuthenticationService;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -97,8 +96,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var username = (String) redisService.get(REFRESH_PREFIX + refreshToken);
         if (username == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         redisService.delete(REFRESH_PREFIX + refreshToken);
 
