@@ -3,10 +3,9 @@ package com.quyentv.bookstorebackend.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.Set;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -24,5 +23,4 @@ public class RoleRequest {
     @NotNull(message = "PERMISSIONS_IS_REQUIRED")
     @Size(min = 1, message = "INVALID_PERMISSIONS")
     Set<@NotBlank(message = "PERMISSION_CANNOT_BE_BLANK") String> permissions;
-
 }

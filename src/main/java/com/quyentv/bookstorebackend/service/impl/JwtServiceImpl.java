@@ -9,6 +9,13 @@ import com.quyentv.bookstorebackend.entity.User;
 import com.quyentv.bookstorebackend.exception.AppException;
 import com.quyentv.bookstorebackend.exception.ErrorCode;
 import com.quyentv.bookstorebackend.service.JwtService;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.StringJoiner;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,14 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -77,12 +76,7 @@ public class JwtServiceImpl implements JwtService {
 
     public String generateRefreshToken(User user) {
         String refreshToken = UUID.randomUUID().toString();
-        redisService.save(
-                REFRESH_PREFIX + refreshToken,
-                user.getUsername(),
-                REFRESHABLE_DURATION,
-                TimeUnit.DAYS
-        );
+        redisService.save(REFRESH_PREFIX + refreshToken, user.getUsername(), REFRESHABLE_DURATION, TimeUnit.DAYS);
         return refreshToken;
     }
 
@@ -95,8 +89,7 @@ public class JwtServiceImpl implements JwtService {
 
         var verified = signedJWT.verify(verifier);
 
-        if (!(verified && expiryTime.after(new Date())))
-            throw new AppException(ErrorCode.INVALID_ACCESS_TOKEN);
+        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.INVALID_ACCESS_TOKEN);
 
         var jti = signedJWT.getJWTClaimsSet().getJWTID();
         if (jti != null && redisService.hasKey(BLACKLIST_PREFIX + jti)) {

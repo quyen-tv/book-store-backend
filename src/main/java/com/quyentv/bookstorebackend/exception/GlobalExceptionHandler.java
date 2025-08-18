@@ -1,18 +1,15 @@
 package com.quyentv.bookstorebackend.exception;
 
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
-
 import jakarta.validation.ConstraintViolation;
+import java.util.Map;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Map;
-import java.util.Objects;
 
 @ControllerAdvice
 @Slf4j
@@ -21,7 +18,7 @@ public class GlobalExceptionHandler {
     private static final String MIN_ATTRIBUTE = "min";
 
     @ExceptionHandler(value = Exception.class)
-     ResponseEntity<ApiResponse<?>> handlingRuntimeException(RuntimeException exception) {
+    ResponseEntity<ApiResponse<?>> handlingRuntimeException(RuntimeException exception) {
         log.error(exception.getMessage(), exception);
         ApiResponse<?> apiResponse = new ApiResponse<>();
 
@@ -59,7 +56,7 @@ public class GlobalExceptionHandler {
         String enumKey = exception.getFieldError().getDefaultMessage();
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
-        Map <String, Object> attributes = null;
+        Map<String, Object> attributes = null;
         try {
             errorCode = ErrorCode.valueOf(enumKey);
 
