@@ -22,6 +22,9 @@ public enum ErrorCode {
     INVALID_PASSWORD(400, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_DOB(400, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
 
+    // ================== Cloudinary related ==================
+    IMAGE_UPLOADED_FAILED(409, "Image uploaded failed", HttpStatus.BAD_REQUEST),
+
     // ================== Validation: Required fields ==================
     USERNAME_IS_REQUIRED(400, "Username is required", HttpStatus.BAD_REQUEST),
     PASSWORD_IS_REQUIRED(400, "Password is required", HttpStatus.BAD_REQUEST),
