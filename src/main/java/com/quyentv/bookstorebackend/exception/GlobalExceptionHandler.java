@@ -1,6 +1,7 @@
 package com.quyentv.bookstorebackend.exception;
 
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
+import com.quyentv.bookstorebackend.formatter.MessageFormatter;
 import jakarta.validation.ConstraintViolation;
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +36,9 @@ public class GlobalExceptionHandler {
         ApiResponse<?> apiResponse = new ApiResponse<>();
 
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
+        String formattedMessage =
+                MessageFormatter.format(exception.getErrorCode().getMessage(), exception.getAttributes());
+        apiResponse.setMessage(formattedMessage);
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
