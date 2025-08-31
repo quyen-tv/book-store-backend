@@ -22,3 +22,8 @@ jwt:
   access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES}
   refreshable-ttl-days: ${JWT_REFRESHABLE_TTL_DAYS}
 
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
