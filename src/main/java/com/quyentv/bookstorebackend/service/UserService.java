@@ -3,6 +3,8 @@ package com.quyentv.bookstorebackend.service;
 import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface UserService {
@@ -18,4 +20,6 @@ public interface UserService {
     List<UserResponse> getUsers();
 
     UserResponse getUser(String id);
+
+    void uploadAvatar(MultipartFile file, String folder);
 }

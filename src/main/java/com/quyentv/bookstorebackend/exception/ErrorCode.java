@@ -22,6 +22,12 @@ public enum ErrorCode {
     INVALID_PASSWORD(400, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_DOB(400, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
 
+    // ================== File related ==================
+    INVALID_FILE(400, "File cannot be null or empty", HttpStatus.BAD_REQUEST),
+
+    // ================== Category related ==================
+    CATEGORY_NOT_EXISTED(409, "Category {id} not existed", HttpStatus.BAD_REQUEST),
+
     // ================== Cloudinary related ==================
     IMAGE_UPLOADED_FAILED(409, "Image uploaded failed", HttpStatus.BAD_REQUEST),
 

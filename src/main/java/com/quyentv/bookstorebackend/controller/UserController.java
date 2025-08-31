@@ -1,15 +1,17 @@
 package com.quyentv.bookstorebackend.controller;
 
+import com.quyentv.bookstorebackend.dto.request.AvatarRequest;
 import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
-import com.quyentv.bookstorebackend.service.impl.UserServiceImpl;
+import com.quyentv.bookstorebackend.service.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,13 +20,13 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
-    UserServiceImpl userServiceImpl;
+    UserService userService;
 
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User created successfully!")
-                .result(userServiceImpl.createUser(request))
+                .result(userService.createUser(request))
                 .build();
     }
 
@@ -32,7 +34,7 @@ public class UserController {
     ApiResponse<List<UserResponse>> getUsers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .message("Users fetched successfully!")
-                .result(userServiceImpl.getUsers())
+                .result(userService.getUsers())
                 .build();
     }
 
@@ -40,7 +42,7 @@ public class UserController {
     ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()
                 .message("User fetched successfully!")
-                .result(userServiceImpl.getUser(userId))
+                .result(userService.getUser(userId))
                 .build();
     }
 
@@ -48,14 +50,14 @@ public class UserController {
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .message("Your information fetched successfully!")
-                .result(userServiceImpl.getMyInfo())
+                .result(userService.getMyInfo())
                 .build();
     }
 
     @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable String userId) {
-        userServiceImpl.deleteUser(userId);
-        return ApiResponse.<String>builder()
+    ApiResponse<Void> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return ApiResponse.<Void>builder()
                 .message("User has been deleted successfully!")
                 .build();
     }
@@ -64,7 +66,15 @@ public class UserController {
     ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User updated successfully!")
-                .result(userServiceImpl.updateUser(userId, request))
+                .result(userService.updateUser(userId, request))
+                .build();
+    }
+
+    @PatchMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ApiResponse<Void> uploadAvatar(@ModelAttribute @Valid AvatarRequest request) {
+        userService.uploadAvatar(request.getFile(), "book-store/users");
+        return ApiResponse.<Void>builder()
+                .message("User avatar uploaded successfully!")
                 .build();
     }
 }
