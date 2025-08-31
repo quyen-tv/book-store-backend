@@ -1,6 +1,7 @@
 package com.quyentv.bookstorebackend.service.impl;
 
 import com.quyentv.bookstorebackend.constant.PredefinedRole;
+import com.quyentv.bookstorebackend.dto.request.AvatarRequest;
 import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
@@ -11,6 +12,7 @@ import com.quyentv.bookstorebackend.exception.ErrorCode;
 import com.quyentv.bookstorebackend.mapper.UserMapper;
 import com.quyentv.bookstorebackend.repository.RoleRepository;
 import com.quyentv.bookstorebackend.repository.UserRepository;
+import com.quyentv.bookstorebackend.service.CloudinaryService;
 import com.quyentv.bookstorebackend.service.UserService;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    CloudinaryService cloudinaryService;
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
@@ -88,5 +92,19 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUser(String id) {
         return userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+    }
+
+    @Override
+    public void uploadAvatar(MultipartFile file, String folder) {
+        String avatar = cloudinaryService.uploadImage(file, folder);
+
+        var context = SecurityContextHolder.getContext();
+        String userName = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setAvatar(avatar);
+        userRepository.save(user);
     }
 }
