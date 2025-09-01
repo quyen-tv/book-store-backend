@@ -21,5 +21,5 @@ public interface UserService {
 
     UserResponse getUser(String id);
 
-    void uploadAvatar(MultipartFile file, String folder);
+    void uploadAvatar(MultipartFile file);
 }
