@@ -1,7 +1,6 @@
 package com.quyentv.bookstorebackend.service.impl;
 
 import com.quyentv.bookstorebackend.constant.PredefinedRole;
-import com.quyentv.bookstorebackend.dto.request.AvatarRequest;
 import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
@@ -37,6 +36,8 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     CloudinaryService cloudinaryService;
+
+    static String USER_AVATAR_FOLDER = "book-store/users";
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
@@ -95,8 +96,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void uploadAvatar(MultipartFile file, String folder) {
-        String avatar = cloudinaryService.uploadImage(file, folder);
+    public void uploadAvatar(MultipartFile file) {
+        String avatar = cloudinaryService.uploadImage(file, USER_AVATAR_FOLDER);
 
         var context = SecurityContextHolder.getContext();
         String userName = context.getAuthentication().getName();
