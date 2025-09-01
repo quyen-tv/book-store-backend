@@ -7,6 +7,7 @@ import com.quyentv.bookstorebackend.dto.request.LogoutRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
+import com.quyentv.bookstorebackend.service.AuthenticationService;
 import com.quyentv.bookstorebackend.service.impl.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
 
-    AuthenticationServiceImpl authenticationServiceImpl;
+    AuthenticationService authenticationService;
 
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(
             @RequestBody @Valid AuthenticationRequest request, HttpServletResponse response) {
-        var result = authenticationServiceImpl.authenticate(request, response);
+        var result = authenticationService.authenticate(request, response);
         return ApiResponse.<AuthenticationResponse>builder()
                 .message("Authentication successful!")
                 .result(result)
@@ -37,19 +38,19 @@ public class AuthenticationController {
     @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authenticate(@RequestBody @Valid IntrospectRequest request)
             throws ParseException, JOSEException {
-        var result = authenticationServiceImpl.introspect(request);
+        var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
     }
 
     @PostMapping("/logout")
-    ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request) throws ParseException, JOSEException {
-        authenticationServiceImpl.logout(request);
+    ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request, @CookieValue String refreshToken) throws ParseException, JOSEException {
+        authenticationService.logout(request, refreshToken);
         return ApiResponse.<Void>builder().message("Logged out successfully!").build();
     }
 
     @PostMapping("/refresh")
     ApiResponse<AuthenticationResponse> refreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
-        var result = authenticationServiceImpl.refreshToken(refreshToken, response);
+        var result = authenticationService.refreshToken(refreshToken, response);
         return ApiResponse.<AuthenticationResponse>builder()
                 .message("Token refreshed successfully!")
                 .result(result)
