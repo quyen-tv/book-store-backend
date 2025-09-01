@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +36,7 @@ public class BookServiceImpl implements BookService {
     BookMapper bookMapper;
     BookImageMapper bookImageMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public BookResponse createBook(BookRequest request) {
         validateImage(request.getImages());
@@ -53,6 +55,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll().stream().map(bookMapper::toBookResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteBook(Long bookId) {
         boolean isExisted = bookRepository.existsById(bookId);
@@ -60,6 +63,7 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(bookId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public BookResponse updateBook(Long bookId, BookRequest request) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));

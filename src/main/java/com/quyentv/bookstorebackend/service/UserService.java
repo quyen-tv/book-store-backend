@@ -10,7 +10,7 @@ public interface UserService {
 
     UserResponse createUser(UserCreationRequest request);
 
-    UserResponse updateUser(String userId, UserUpdateRequest request);
+    UserResponse updateUser(UserUpdateRequest request);
 
     UserResponse getMyInfo();
 

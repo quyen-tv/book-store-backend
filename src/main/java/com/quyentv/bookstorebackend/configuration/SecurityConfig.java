@@ -1,5 +1,6 @@
 package com.quyentv.bookstorebackend.configuration;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,16 +21,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect", "auth/logout"};
+    private static final Map<HttpMethod, String[]> PUBLIC_ENDPOINTS = Map.of(
+            HttpMethod.POST, new String[] {"/users", "/auth/token", "/auth/refresh", "/auth/introspect"},
+            HttpMethod.GET, new String[] {"/books", "/categories"});
 
     private final CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        httpSecurity.authorizeHttpRequests(request -> {
+            PUBLIC_ENDPOINTS.forEach((method, endpoints) ->
+                    request.requestMatchers(method, endpoints).permitAll());
+            request.anyRequest().authenticated();
+        });
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)

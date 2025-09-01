@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
     CategoryMapper categoryMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public CategoryResponse createCategory(CategoryCreationRequest request) {
         Category category = categoryMapper.toCategory(request);
@@ -35,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categories.stream().map(categoryMapper::toCategoryResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);

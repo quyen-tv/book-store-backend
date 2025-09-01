@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(user);
     }
 
-    public UserResponse updateUser(String userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+    @PreAuthorize("isAuthenticated()")
+    public UserResponse updateUser(UserUpdateRequest request) {
+        User user = getCurrentLogin();
         userMapper.updateUser(user, request);
 
         var roles = roleRepository.findAllById(request.getRoles());
@@ -69,12 +69,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("isAuthenticated()")
     public UserResponse getMyInfo() {
-        var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
-
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+        User user = getCurrentLogin();
         return userMapper.toUserResponse(user);
     }
 
@@ -85,7 +82,6 @@ public class UserServiceImpl implements UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
@@ -95,6 +91,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Override
     public void uploadAvatar(MultipartFile file) {
         String avatar = cloudinaryService.uploadImage(file, USER_AVATAR_FOLDER);
@@ -107,5 +104,11 @@ public class UserServiceImpl implements UserService {
 
         user.setAvatar(avatar);
         userRepository.save(user);
+    }
+
+    private User getCurrentLogin() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        return userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }
