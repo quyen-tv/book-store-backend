@@ -1,8 +1,10 @@
 package com.quyentv.bookstorebackend.controller;
 
+import com.quyentv.bookstorebackend.dto.request.BookFilter;
 import com.quyentv.bookstorebackend.dto.request.BookRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.BookResponse;
+import com.quyentv.bookstorebackend.dto.response.PageResponse;
 import com.quyentv.bookstorebackend.service.BookService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -28,10 +30,27 @@ public class BookController {
     }
 
     @GetMapping
-    ApiResponse<List<BookResponse>> getAllBooks() {
-        return ApiResponse.<List<BookResponse>>builder()
+    ApiResponse<PageResponse<BookResponse>> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double priceMin,
+            @RequestParam(required = false) Double priceMax
+    ) {
+        BookFilter filter = BookFilter.builder()
+                .title(title)
+                .author(author)
+                .category(category)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .build();
+
+        return ApiResponse.<PageResponse<BookResponse>>builder()
                 .message("Books fetched successfully!")
-                .result(bookService.getAllBooks())
+                .result(bookService.getAllBooks(page, limit, sort, filter))
                 .build();
     }
 

@@ -1,8 +1,10 @@
 package com.quyentv.bookstorebackend.service.impl;
 
+import com.quyentv.bookstorebackend.dto.request.BookFilter;
 import com.quyentv.bookstorebackend.dto.request.BookImageRequest;
 import com.quyentv.bookstorebackend.dto.request.BookRequest;
 import com.quyentv.bookstorebackend.dto.response.BookResponse;
+import com.quyentv.bookstorebackend.dto.response.PageResponse;
 import com.quyentv.bookstorebackend.entity.Book;
 import com.quyentv.bookstorebackend.entity.BookImage;
 import com.quyentv.bookstorebackend.entity.Category;
@@ -17,11 +19,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.quyentv.bookstorebackend.specification.BookSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +60,38 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponse> getAllBooks() {
-        return bookRepository.findAll().stream().map(bookMapper::toBookResponse).toList();
+    public PageResponse<BookResponse> getAllBooks(int page, int limit, String sort, BookFilter filter) {
+
+        Sort sortObj = Sort.by("id").descending();
+        if (sort != null && !sort.isBlank()) {
+            String[] parts = sort.split(",");
+            sortObj = Sort.by(Sort.Direction.fromString(parts[1]), parts[0]);
+        }
+
+        Pageable pageable = PageRequest.of(page, limit, sortObj);
+
+        Specification<Book> spec = BookSpecification.titleContains(filter.getTitle())
+                .and(BookSpecification.authorContains(filter.getAuthor()))
+                .and(BookSpecification.priceGreaterThanOrEq(filter.getPriceMin()))
+                .and(BookSpecification.priceLessThanOrEq(filter.getPriceMax()))
+                .and(BookSpecification.categoryEquals(filter.getCategory()));
+
+        Page<Book> bookPage = bookRepository.findAll(spec, pageable);
+
+        List<BookResponse> items = bookPage.getContent()
+                .stream()
+                .map(bookMapper::toBookResponse)
+                .toList();
+
+        return PageResponse.<BookResponse>builder()
+                .items(items)
+                .page(bookPage.getNumber())
+                .limit(bookPage.getSize())
+                .totalItems((int) bookPage.getTotalElements())
+                .totalPages(bookPage.getTotalPages())
+                .hasNextPage(bookPage.hasNext())
+                .hasPrevPage(bookPage.hasPrevious())
+                .build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
