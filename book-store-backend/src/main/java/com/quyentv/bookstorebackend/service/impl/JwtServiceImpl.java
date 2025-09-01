@@ -48,6 +48,7 @@ public class JwtServiceImpl implements JwtService {
 
     RedisServiceImpl redisService;
 
+    @Override
     public String generateAccessToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -74,12 +75,14 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    @Override
     public String generateRefreshToken(User user) {
         String refreshToken = UUID.randomUUID().toString();
         redisService.save(REFRESH_PREFIX + refreshToken, user.getUsername(), REFRESHABLE_DURATION, TimeUnit.DAYS);
         return refreshToken;
     }
 
+    @Override
     public SignedJWT verifyAccessToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 

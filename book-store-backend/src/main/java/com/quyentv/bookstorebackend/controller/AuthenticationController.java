@@ -8,7 +8,6 @@ import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.AuthenticationResponse;
 import com.quyentv.bookstorebackend.dto.response.IntrospectResponse;
 import com.quyentv.bookstorebackend.service.AuthenticationService;
-import com.quyentv.bookstorebackend.service.impl.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.text.ParseException;
@@ -43,7 +42,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request, @CookieValue String refreshToken) throws ParseException, JOSEException {
+    ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request, @CookieValue String refreshToken)
+            throws ParseException, JOSEException {
         authenticationService.logout(request, refreshToken);
         return ApiResponse.<Void>builder().message("Logged out successfully!").build();
     }

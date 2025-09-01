@@ -4,7 +4,6 @@ import com.quyentv.bookstorebackend.dto.request.PermissionRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.PermissionResponse;
 import com.quyentv.bookstorebackend.service.PermissionService;
-import com.quyentv.bookstorebackend.service.impl.PermissionServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AccessLevel;

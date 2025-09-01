@@ -102,8 +102,8 @@ public class UserServiceImpl implements UserService {
         var context = SecurityContextHolder.getContext();
         String userName = context.getAuthentication().getName();
 
-        User user = userRepository.findByUsername(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user =
+                userRepository.findByUsername(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         user.setAvatar(avatar);
         userRepository.save(user);

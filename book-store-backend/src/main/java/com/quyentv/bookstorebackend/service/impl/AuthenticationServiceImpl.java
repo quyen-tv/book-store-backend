@@ -43,6 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static final String BLACKLIST_PREFIX = "jti:";
     private static final String REFRESH_PREFIX = "refresh:";
 
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         var user = userRepository
                 .findByUsername(request.getUsername())
@@ -73,6 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getAccessToken();
         boolean isValid = true;
@@ -86,6 +88,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
+    @Override
     public void logout(LogoutRequest request, String refreshToken) throws ParseException, JOSEException {
 
         try {
@@ -105,6 +108,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         redisService.delete(REFRESH_PREFIX + refreshToken);
     }
 
+    @Override
     public AuthenticationResponse refreshToken(String refreshToken, HttpServletResponse response) {
         if (refreshToken == null || refreshToken.isEmpty()) throw new AppException(ErrorCode.REFRESH_TOKEN_IS_REQUIRED);
 

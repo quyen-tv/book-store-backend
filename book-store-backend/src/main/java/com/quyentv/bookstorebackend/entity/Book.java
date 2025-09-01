@@ -18,9 +18,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "books", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"title", "author"})
-})
+@Table(
+        name = "books",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "author"})})
 public class Book {
 
     @Id
