@@ -3,6 +3,7 @@ package com.quyentv.bookstorebackend.controller;
 import com.quyentv.bookstorebackend.dto.request.RoleRequest;
 import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.RoleResponse;
+import com.quyentv.bookstorebackend.service.RoleService;
 import com.quyentv.bookstorebackend.service.impl.RoleServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class RoleController {
-    RoleServiceImpl roleServiceImpl;
+    RoleService roleService;
 
     @PostMapping
     ApiResponse<RoleResponse> create(@RequestBody @Valid RoleRequest request) {
         return ApiResponse.<RoleResponse>builder()
-                .result(roleServiceImpl.create(request))
+                .result(roleService.create(request))
                 .message("Role created successfully!")
                 .build();
     }
@@ -32,13 +33,13 @@ public class RoleController {
     ApiResponse<List<RoleResponse>> getAll() {
         return ApiResponse.<List<RoleResponse>>builder()
                 .message("Roles fetched successfully!")
-                .result(roleServiceImpl.getAll())
+                .result(roleService.getAll())
                 .build();
     }
 
     @DeleteMapping("/{role}")
     ApiResponse<Void> delete(@PathVariable String role) {
-        roleServiceImpl.delete(role);
+        roleService.delete(role);
         return ApiResponse.<Void>builder()
                 .message("Role has been deleted successfully!")
                 .build();

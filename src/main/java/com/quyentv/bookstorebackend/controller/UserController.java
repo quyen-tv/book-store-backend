@@ -72,7 +72,7 @@ public class UserController {
 
     @PatchMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ApiResponse<Void> uploadAvatar(@ModelAttribute @Valid AvatarRequest request) {
-        userService.uploadAvatar(request.getFile(), "book-store/users");
+        userService.uploadAvatar(request.getFile());
         return ApiResponse.<Void>builder()
                 .message("User avatar uploaded successfully!")
                 .build();

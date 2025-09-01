@@ -13,7 +13,4 @@ public class LogoutRequest {
 
     @NotBlank(message = "ACCESS_TOKEN_IS_REQUIRED")
     String accessToken;
-
-    @NotBlank(message = "REFRESH_TOKEN_IS_REQUIRED")
-    String refreshToken;
 }

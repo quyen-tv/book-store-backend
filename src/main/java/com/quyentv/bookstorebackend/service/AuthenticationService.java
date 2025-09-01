@@ -14,7 +14,7 @@ public interface AuthenticationService {
 
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
 
-    void logout(LogoutRequest request) throws ParseException, JOSEException;
+    void logout(LogoutRequest request, String refreshToken) throws ParseException, JOSEException;
 
     AuthenticationResponse refreshToken(String refreshToken, HttpServletResponse response);
 }

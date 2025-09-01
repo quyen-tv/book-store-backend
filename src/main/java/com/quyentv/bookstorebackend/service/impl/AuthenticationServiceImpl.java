@@ -86,7 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
-    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+    public void logout(LogoutRequest request, String refreshToken) throws ParseException, JOSEException {
 
         try {
             var accessToken = request.getAccessToken();
@@ -102,7 +102,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.info("Token already expired");
         }
 
-        var refreshToken = request.getRefreshToken();
         redisService.delete(REFRESH_PREFIX + refreshToken);
     }
 
