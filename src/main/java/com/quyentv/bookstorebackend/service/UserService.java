@@ -3,9 +3,8 @@ package com.quyentv.bookstorebackend.service;
 import com.quyentv.bookstorebackend.dto.request.UserCreationRequest;
 import com.quyentv.bookstorebackend.dto.request.UserUpdateRequest;
 import com.quyentv.bookstorebackend.dto.response.UserResponse;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
