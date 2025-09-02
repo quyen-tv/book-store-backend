@@ -32,6 +32,14 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request -> {
             PUBLIC_ENDPOINTS.forEach((method, endpoints) ->
                     request.requestMatchers(method, endpoints).permitAll());
+            request.requestMatchers(
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/webjars/**",
+                            "/favicon.ico")
+                    .permitAll();
             request.anyRequest().authenticated();
         });
 
