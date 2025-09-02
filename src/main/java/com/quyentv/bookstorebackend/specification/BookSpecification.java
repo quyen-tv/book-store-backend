@@ -27,23 +27,17 @@ public class BookSpecification {
     }
 
     public static Specification<Book> priceGreaterThanOrEq(Double priceMin) {
-        return (root, query, cb) ->
-                priceMin == null ? cb.conjunction() :
-                        cb.ge(root.get("price"), priceMin);
+        return (root, query, cb) -> priceMin == null ? cb.conjunction() : cb.ge(root.get("price"), priceMin);
     }
 
     public static Specification<Book> priceLessThanOrEq(Double priceMax) {
-        return (root, query, cb) ->
-                priceMax == null ? cb.conjunction() :
-                        cb.le(root.get("price"), priceMax);
+        return (root, query, cb) -> priceMax == null ? cb.conjunction() : cb.le(root.get("price"), priceMax);
     }
 
     public static Specification<Book> categoryEquals(String categoryName) {
-        return (root, query, cb) ->
-                categoryName == null ? cb.conjunction() :
-                        cb.isMember(
-                                categoryName,
-                                root.join("categories", JoinType.LEFT).get("name")
-                        );
+        return (root, query, cb) -> categoryName == null
+                ? cb.conjunction()
+                : cb.isMember(
+                        categoryName, root.join("categories", JoinType.LEFT).get("name"));
     }
 }

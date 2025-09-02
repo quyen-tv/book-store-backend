@@ -5,8 +5,6 @@ import com.quyentv.bookstorebackend.dto.request.BookRequest;
 import com.quyentv.bookstorebackend.dto.response.BookResponse;
 import com.quyentv.bookstorebackend.dto.response.PageResponse;
 
-import java.util.List;
-
 public interface BookService {
 
     BookResponse createBook(BookRequest request);

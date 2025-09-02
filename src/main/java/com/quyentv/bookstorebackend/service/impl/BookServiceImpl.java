@@ -15,12 +15,11 @@ import com.quyentv.bookstorebackend.mapper.BookMapper;
 import com.quyentv.bookstorebackend.repository.BookRepository;
 import com.quyentv.bookstorebackend.repository.CategoryRepository;
 import com.quyentv.bookstorebackend.service.BookService;
+import com.quyentv.bookstorebackend.specification.BookSpecification;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.quyentv.bookstorebackend.specification.BookSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -78,10 +77,8 @@ public class BookServiceImpl implements BookService {
 
         Page<Book> bookPage = bookRepository.findAll(spec, pageable);
 
-        List<BookResponse> items = bookPage.getContent()
-                .stream()
-                .map(bookMapper::toBookResponse)
-                .toList();
+        List<BookResponse> items =
+                bookPage.getContent().stream().map(bookMapper::toBookResponse).toList();
 
         return PageResponse.<BookResponse>builder()
                 .items(items)

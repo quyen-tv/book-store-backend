@@ -6,13 +6,15 @@ import com.quyentv.bookstorebackend.dto.response.ApiResponse;
 import com.quyentv.bookstorebackend.dto.response.BookResponse;
 import com.quyentv.bookstorebackend.dto.response.PageResponse;
 import com.quyentv.bookstorebackend.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Book Controller", description = "Endpoints for managing books")
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class BookController {
 
     BookService bookService;
 
+    @Operation(summary = "Create a new book", description = "Create a new book with the provided details.")
     @PostMapping
     ApiResponse<BookResponse> createBook(@RequestBody @Valid BookRequest request) {
         return ApiResponse.<BookResponse>builder()
@@ -29,6 +32,7 @@ public class BookController {
                 .build();
     }
 
+    @Operation(summary = "Get all books", description = "Retrieve a paginated list of books with optional filters.")
     @GetMapping
     ApiResponse<PageResponse<BookResponse>> getAllBooks(
             @RequestParam(defaultValue = "0") int page,
@@ -38,8 +42,7 @@ public class BookController {
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Double priceMin,
-            @RequestParam(required = false) Double priceMax
-    ) {
+            @RequestParam(required = false) Double priceMax) {
         BookFilter filter = BookFilter.builder()
                 .title(title)
                 .author(author)
@@ -54,6 +57,7 @@ public class BookController {
                 .build();
     }
 
+    @Operation(summary = "Update a book", description = "Update an existing book's details.")
     @PutMapping("/{bookId}")
     ApiResponse<BookResponse> updateBook(@PathVariable Long bookId, @RequestBody @Valid BookRequest request) {
         return ApiResponse.<BookResponse>builder()
@@ -62,6 +66,7 @@ public class BookController {
                 .build();
     }
 
+    @Operation(summary = "Delete a book", description = "Delete a book by its ID.")
     @DeleteMapping("/{bookId}")
     ApiResponse<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
