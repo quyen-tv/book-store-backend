@@ -110,6 +110,12 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toBookResponse(book);
     }
 
+    @Override
+    public BookResponse getBook(Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
+        return bookMapper.toBookResponse(book);
+    }
+
     private void validateImage(Set<BookImageRequest> images) {
         long primaryCount =
                 images.stream().filter(BookImageRequest::getIsPrimary).count();

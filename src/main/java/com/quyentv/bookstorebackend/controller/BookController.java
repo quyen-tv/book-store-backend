@@ -57,6 +57,15 @@ public class BookController {
                 .build();
     }
 
+    @Operation(summary = "Get a book", description = "Get an existing book's details.")
+    @GetMapping("/{bookId}")
+    ApiResponse<BookResponse> getBook(@PathVariable Long bookId) {
+        return ApiResponse.<BookResponse>builder()
+                .message("Book information fetched successfully!")
+                .result(bookService.getBook(bookId))
+                .build();
+    }
+
     @Operation(summary = "Update a book", description = "Update an existing book's details.")
     @PutMapping("/{bookId}")
     ApiResponse<BookResponse> updateBook(@PathVariable Long bookId, @RequestBody @Valid BookRequest request) {

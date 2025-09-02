@@ -23,7 +23,7 @@ public class SecurityConfig {
 
     private static final Map<HttpMethod, String[]> PUBLIC_ENDPOINTS = Map.of(
             HttpMethod.POST, new String[] {"/users", "/auth/token", "/auth/refresh", "/auth/introspect"},
-            HttpMethod.GET, new String[] {"/books", "/categories"});
+            HttpMethod.GET, new String[] {"/books", "/books/*", "/categories"});
 
     private final CustomJwtDecoder customJwtDecoder;
 
