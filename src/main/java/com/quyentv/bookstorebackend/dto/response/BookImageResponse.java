@@ -12,5 +12,4 @@ public class BookImageResponse {
 
     Long id;
     String url;
-    boolean isPrimary;
 }

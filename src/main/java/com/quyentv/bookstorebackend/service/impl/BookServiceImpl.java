@@ -1,7 +1,6 @@
 package com.quyentv.bookstorebackend.service.impl;
 
 import com.quyentv.bookstorebackend.dto.request.BookFilter;
-import com.quyentv.bookstorebackend.dto.request.BookImageRequest;
 import com.quyentv.bookstorebackend.dto.request.BookRequest;
 import com.quyentv.bookstorebackend.dto.response.BookResponse;
 import com.quyentv.bookstorebackend.dto.response.PageResponse;
@@ -47,14 +46,15 @@ public class BookServiceImpl implements BookService {
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public BookResponse createBook(BookRequest request) {
-        validateImage(request.getImages());
         Book book = bookMapper.toBook(request);
         populateCategoriesAndImages(request, book);
+
         try {
             bookRepository.save(book);
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.BOOK_EXISTED);
         }
+
         return bookMapper.toBookResponse(book);
     }
 
@@ -103,7 +103,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponse updateBook(Long bookId, BookRequest request) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
-        validateImage(request.getImages());
         bookMapper.updateBook(book, request);
         populateCategoriesAndImages(request, book);
         bookRepository.save(book);
@@ -114,13 +113,6 @@ public class BookServiceImpl implements BookService {
     public BookResponse getBook(Long bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
         return bookMapper.toBookResponse(book);
-    }
-
-    private void validateImage(Set<BookImageRequest> images) {
-        long primaryCount =
-                images.stream().filter(BookImageRequest::getIsPrimary).count();
-        if (primaryCount > 1) throw new AppException(ErrorCode.DUPLICATE_PRIMARY_IMAGE);
-        if (primaryCount == 0) throw new AppException(ErrorCode.PRIMARY_IMAGE_IS_REQUIRED);
     }
 
     private void populateCategoriesAndImages(BookRequest request, Book book) {
@@ -141,7 +133,7 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<BookImage> resolveBookImages(Set<BookImageRequest> images) {
+    private Set<BookImage> resolveBookImages(Set<String> images) {
         return images.stream().map(bookImageMapper::toBookImage).collect(Collectors.toSet());
     }
 }

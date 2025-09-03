@@ -61,6 +61,7 @@ public enum ErrorCode {
     FORMAT_IS_REQUIRED(400, "Format is required", HttpStatus.BAD_REQUEST),
     PRIMARY_IMAGE_IS_REQUIRED(400, "Primary image is required", HttpStatus.BAD_REQUEST),
     IS_PRIMARY_IS_REQUIRED(400, "Is primary is required", HttpStatus.BAD_REQUEST),
+    THUMBNAIL_IS_REQUIRED(400, "Thumbnail is required", HttpStatus.BAD_REQUEST),
 
     // ================== Validation: Non-blank/null ==================
     PERMISSION_CANNOT_BE_BLANK(400, "Permission can not be blank", HttpStatus.BAD_REQUEST),

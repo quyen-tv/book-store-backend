@@ -52,6 +52,9 @@ public class Book {
     @Builder.Default
     Set<Category> categories = new HashSet<>();
 
+    @Column(nullable = false)
+    String thumbnail;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "book_id")
     @Builder.Default

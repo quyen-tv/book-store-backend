@@ -20,6 +20,7 @@ public class BookResponse {
     Double price;
     Integer stock;
     Set<CategoryResponse> categories;
+    String thumbnail;
     Set<BookImageResponse> images;
     String isbn;
     String publisher;
