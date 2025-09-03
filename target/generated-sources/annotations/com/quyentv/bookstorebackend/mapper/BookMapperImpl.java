@@ -38,6 +38,7 @@ public class BookMapperImpl implements BookMapper {
         book.description( request.getDescription() );
         book.price( request.getPrice() );
         book.stock( request.getStock() );
+        book.thumbnail( request.getThumbnail() );
         book.isbn( request.getIsbn() );
         book.publisher( request.getPublisher() );
         book.publicationDate( request.getPublicationDate() );
@@ -65,6 +66,7 @@ public class BookMapperImpl implements BookMapper {
         bookResponse.setDescription( book.getDescription() );
         bookResponse.setPrice( book.getPrice() );
         bookResponse.setStock( book.getStock() );
+        bookResponse.setThumbnail( book.getThumbnail() );
         bookResponse.setIsbn( book.getIsbn() );
         bookResponse.setPublisher( book.getPublisher() );
         bookResponse.setPublicationDate( book.getPublicationDate() );
@@ -90,6 +92,7 @@ public class BookMapperImpl implements BookMapper {
         book.setDescription( request.getDescription() );
         book.setPrice( request.getPrice() );
         book.setStock( request.getStock() );
+        book.setThumbnail( request.getThumbnail() );
         book.setIsbn( request.getIsbn() );
         book.setPublisher( request.getPublisher() );
         book.setPublicationDate( request.getPublicationDate() );

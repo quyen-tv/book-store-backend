@@ -1,6 +1,5 @@
 package com.quyentv.bookstorebackend.dto.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
@@ -36,9 +35,12 @@ public class BookRequest {
     Set<@NotNull(message = "CATEGORY_ID_CANNOT_BE_NULL") @Positive(message = "CATEGORY_ID_MUST_BE_POSITIVE") Long>
             categoryIds;
 
+    @NotBlank(message = "THUMBNAIL_IS_REQUIRED")
+    String thumbnail;
+
     @NotNull(message = "IMAGES_IS_REQUIRED")
     @Size(min = 1, message = "INVALID_IMAGES")
-    Set<@Valid @NotNull(message = "IMAGE_CANNOT_BE_NULL") BookImageRequest> images;
+    Set<@NotBlank(message = "IMAGE_URL_IS_REQUIRED") String> images;
 
     @NotNull(message = "ISBN_IS_REQUIRED")
     @Size(min = 10, max = 13, message = "ISBN_INVALID_LENGTH")

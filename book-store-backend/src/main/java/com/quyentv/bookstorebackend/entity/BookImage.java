@@ -20,7 +20,4 @@ public class BookImage {
 
     @Column(nullable = false)
     String url;
-
-    @Column(name = "is_primary", nullable = false)
-    boolean isPrimary;
 }
