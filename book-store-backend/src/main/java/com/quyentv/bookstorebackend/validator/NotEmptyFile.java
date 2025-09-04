@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = NotEmptyFileValidator.class)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotEmptyFile {
     String message() default "";
