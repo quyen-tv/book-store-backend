@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     // ================== File related ==================
     INVALID_FILE(400, "File cannot be null or empty", HttpStatus.BAD_REQUEST),
+    INVALID_FILES(400, "Files must have at least 1", HttpStatus.BAD_REQUEST),
 
     // ================== Category related ==================
     CATEGORY_NOT_EXISTED(409, "Category {id} not existed", HttpStatus.BAD_REQUEST),
@@ -62,6 +63,7 @@ public enum ErrorCode {
     PRIMARY_IMAGE_IS_REQUIRED(400, "Primary image is required", HttpStatus.BAD_REQUEST),
     IS_PRIMARY_IS_REQUIRED(400, "Is primary is required", HttpStatus.BAD_REQUEST),
     THUMBNAIL_IS_REQUIRED(400, "Thumbnail is required", HttpStatus.BAD_REQUEST),
+    FILES_IS_REQUIRED(400, "Files is required", HttpStatus.BAD_REQUEST),
 
     // ================== Validation: Non-blank/null ==================
     PERMISSION_CANNOT_BE_BLANK(400, "Permission can not be blank", HttpStatus.BAD_REQUEST),
