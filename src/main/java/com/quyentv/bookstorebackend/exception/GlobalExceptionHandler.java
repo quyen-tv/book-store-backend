@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -93,6 +95,16 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
                         .message("Invalid request payload")
+                        .build());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    ResponseEntity<ApiResponse<?>> handleBadCredentialsException() {
+        ErrorCode errorCode = ErrorCode.INVALID_CREDENTIALS;
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
                         .build());
     }
 

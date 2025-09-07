@@ -11,7 +11,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_IS_REQUIRED(400, "Refresh token is required", HttpStatus.BAD_REQUEST),
     INVALID_ACCESS_TOKEN(400, "Access token is invalid", HttpStatus.BAD_REQUEST),
     INVALID_REFRESH_TOKEN(400, "Refresh token is invalid", HttpStatus.BAD_REQUEST),
-    INVALID_CREDENTIALS(401, "Password is incorrect", HttpStatus.UNAUTHORIZED),
+    INVALID_CREDENTIALS(401, "Invalid username or password", HttpStatus.UNAUTHORIZED),
     UNAUTHENTICATED(401, "You need to log in to perform this action.", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(403, "You do not have permission", HttpStatus.FORBIDDEN),
 
